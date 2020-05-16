@@ -43,7 +43,7 @@ public class BatchTest {
 		try {
 			Map<String,Object> jobDetail = new HashMap<>();	
 			jobDetail.put("jobName", "TestJob");
-			jobDetail.put("name", "Test");
+			jobDetail.put("jobType", "chunk");
 			jobDetail.put("group", "testGroup");
 			jobDetail.put("cronExp", "0 0/1 * 1/1 * ? *");
 			jobDetail.put("cronName", "cron_trigger");
