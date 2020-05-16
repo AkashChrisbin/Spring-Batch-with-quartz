@@ -37,13 +37,42 @@ public class BatchTest {
 		}
 		System.out.print("Completed");
 	}
+	
+	
+	@Test
+	public void pauseTrigger() {
+		try {
+		quartz.pauseJob("TestJobTask1_trigger");
+		Thread.sleep(200000000);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		System.out.print("Completed");
+	}
+	
 
+	@Test
+	public void resumeTrigger() {
+		try {
+		quartz.pauseJob("TestJobTask1_trigger");	
+		Thread.sleep(2000);
+		quartz.resumeJob("TestJobTask1_trigger");
+		Thread.sleep(200000000);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		System.out.print("Completed");
+	}
+	
 	@Test
 	public void testJobLauncher() {
 		try {
 			Map<String,Object> jobDetail = new HashMap<>();	
 			jobDetail.put("jobName", "TestJob");
 			jobDetail.put("jobType", "chunk");
+			jobDetail.put("name", "Test");
 			jobDetail.put("group", "testGroup");
 			jobDetail.put("cronExp", "0 0/1 * 1/1 * ? *");
 			jobDetail.put("cronName", "cron_trigger");

@@ -98,4 +98,22 @@ public class QuartzConfiguriation {
 		}
 	}
 
+	public void pauseJob(String triggerKeyString) {
+		try {
+			TriggerKey triggerKey = new TriggerKey(triggerKeyString);
+		    scheduler.pauseTrigger(triggerKey);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void resumeJob(String triggerKeyString) {
+		try {
+			TriggerKey triggerKey = new TriggerKey(triggerKeyString);
+		    scheduler.resumeTrigger(triggerKey);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 }

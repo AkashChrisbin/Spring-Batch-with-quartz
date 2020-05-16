@@ -27,12 +27,13 @@ public class QuatrzJobDetail {
 			jobDetail2.put("writer", "com.fingress.batch.writer.FgTestWriter");
 			jobDetailList.add(jobDetail2);
 			
+			
 			Map<String,Object> jobDetail = new HashMap<>();	
 			jobDetail.put("jobName", "TestJobTask1");
 			jobDetail.put("jobType", "tasklet");
 			jobDetail.put("name", "Test1");
 			jobDetail.put("group", "testGroup1");
-			jobDetail.put("cronExp", "0 0/1 * 1/1 * ? *");
+			jobDetail.put("cronExp", "*/5 * * * * ?");
 			jobDetail.put("cronName", "cron_trigger3");
 			jobDetail.put("cronGroup", "cron_group2");
 			jobDetail.put("stepName", "CronStep4");
