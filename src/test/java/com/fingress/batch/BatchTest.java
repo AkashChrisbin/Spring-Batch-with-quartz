@@ -5,10 +5,12 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.batch.core.Job;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.fingress.batch.quartz.CustomBacthJobInitializer;
 import com.fingress.batch.quartz.QuartzConfiguriation;
 
 @RunWith(SpringRunner.class)
@@ -20,7 +22,7 @@ public class BatchTest {
 	
 	
 	@Autowired
-	private BatchConfig jobLauncher;
+	private CustomBacthJobInitializer jobLauncher;
 
 	@Test
 	public void contextLoads() {
@@ -31,6 +33,22 @@ public class BatchTest {
 		try {
 		quartz.rescheduleJob("TestJob1_trigger","*/5 * * * * ?");
 		Thread.sleep(200000000);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		System.out.print("Completed");
+	}
+	
+	
+	@Test
+	public void getJobInfo() {
+		try {
+		Thread.sleep(500);	
+		Job job =jobLauncher.getJobInfo("TestJobTask1");
+		System.out.println("The job is ->"+job);
+		Thread.sleep(50000);	
+	
 		}
 		catch(Exception e) {
 			e.printStackTrace();

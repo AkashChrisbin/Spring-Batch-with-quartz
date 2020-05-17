@@ -1,11 +1,12 @@
 package com.fingress.batch.quartz;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.quartz.JobExecutionContext;
-import org.springframework.batch.core.JobExecutionException;
+import org.quartz.Scheduler;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.configuration.JobLocator;
@@ -13,7 +14,6 @@ import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
-
 
 public class QuartzJobLauncher extends QuartzJobBean {
 
@@ -24,26 +24,36 @@ public class QuartzJobLauncher extends QuartzJobBean {
 	@Autowired
 	private JobLauncher jobLauncher;
 
-
-
 	protected void executeInternal(JobExecutionContext context) {
 
-		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-
-		Map<String, Object> jobDataMap = context.getMergedJobDataMap();
-
-		String jobName = (String) jobDataMap.get(JOB_NAME);
-
-		JobParameters jobParameters = getJobParametersFromJobMap(jobDataMap);
-		
 		try {
+			SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+
+			Scheduler scheduler = context.getScheduler();
+
+			List<JobExecutionContext> jobs = scheduler.getCurrentlyExecutingJobs();
+
+			Map<String, Object> jobDataMap = context.getMergedJobDataMap();
+
+			String jobName = (String) jobDataMap.get(JOB_NAME);
+
+			for (JobExecutionContext job : jobs) {
+				if (job.getTrigger().equals(context.getTrigger()) && job.getJobDetail() != context.getJobDetail()) {
+					System.out.println("Already a instance of the job  "+ jobName  +"   running!");
+					return;
+				}
+
+			}
+			JobParameters jobParameters = getJobParametersFromJobMap(jobDataMap);
+
 			jobLauncher.run(jobLocator.getJob(jobName), jobParameters);
-		} catch (JobExecutionException e) {
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	//get params from jobDataAsMap property, job-quartz.xml
+	// get params from jobDataAsMap property, job-quartz.xml
 	private JobParameters getJobParametersFromJobMap(Map<String, Object> jobDataMap) {
 
 		JobParametersBuilder builder = new JobParametersBuilder();
@@ -65,9 +75,9 @@ public class QuartzJobLauncher extends QuartzJobBean {
 			}
 		}
 
-		//need unique job parameter to rerun the same job
+		// need unique job parameter to rerun the same job
 		builder.addDate("run date", new Date());
-		
+
 		return builder.toJobParameters();
 
 	}

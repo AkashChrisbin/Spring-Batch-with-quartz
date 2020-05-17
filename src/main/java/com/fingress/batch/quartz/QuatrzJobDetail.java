@@ -18,7 +18,7 @@ public class QuatrzJobDetail {
 			jobDetail2.put("jobType", "chunk");
 			jobDetail2.put("name", "Test1");
 			jobDetail2.put("group", "testGroup1");
-			jobDetail2.put("cronExp", "0 0/2 * 1/1 * ? *");
+			jobDetail2.put("cronExp", "0 0/1 * 1/1 * ? *");
 			jobDetail2.put("cronName", "cron_trigger1");
 			jobDetail2.put("cronGroup", "cron_group1");
 			jobDetail2.put("stepName", "CronStep2");
